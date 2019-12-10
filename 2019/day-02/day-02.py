@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
-import numpy as np
 import csv
+import itertools
 
 
 def load_input_file(path):
@@ -90,12 +90,11 @@ def part_two():
     # Brute force the solution
     target = 19690720
     search_range = 100
-    for noun in range(search_range):
-        for verb in range(search_range):
-            if intcode(input, noun, verb)[0] == target:
-                print(f"# noun verb inputs are: {noun}, {verb}\n")
-                print(f"  100 * noun + verb = {100 * noun + verb}")
-                break
+    for noun, verb in itertools.product(range(search_range), range(search_range)):
+        if intcode(input, noun, verb)[0] == target:
+            print(f"# noun verb inputs are: {noun}, {verb}\n")
+            print(f"  100 * noun + verb = {100 * noun + verb}")
+            break
 
 
 def main():
