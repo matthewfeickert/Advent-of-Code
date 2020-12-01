@@ -11,10 +11,18 @@ def load_input_file(path):
     return [int(x[0]) for x in csv.reader(open(path, "r"), delimiter="\t")]
 
 
+def test_data():
+    return [1721, 979, 366, 299, 675, 1456]
+
+
 def product_of_summands(inputs, target):
     for pair in itertools.product(inputs, inputs[1:]):
         if sum(pair) == target:
             return reduce(mul, pair)
+
+
+def test_pairs():
+    assert product_of_summands(test_data(), 2020) == 514579
 
 
 def product_of_ntuples(inputs, target, order):
@@ -26,29 +34,32 @@ def product_of_ntuples(inputs, target, order):
             return reduce(mul, ntuple)
 
 
+def test_tripples():
+    assert product_of_ntuples(test_data(), 2020, 3) == 241861950
+
+
 def part_one():
     inputs = load_input_file("input.txt")
     answer = product_of_summands(inputs, 2020)
-    print(f"\n# Product is: {answer}\n")
+    print(f"\n# Product of pair is: {answer}")
 
 
 def part_two():
     inputs = load_input_file("input.txt")
-    print(np.array(inputs))
     answer = product_of_ntuples(inputs, target=2020, order=3)
-    print(f"\n# Product is: {answer}\n")
+    print(f"\n# Product of tripplet is: {answer}")
 
 
-# def tests():
-#     test_fuel()
-#     test_total_fuel()
+def tests():
+    test_pairs()
+    test_tripples()
 
 
 def main():
-    # part_one()
+    part_one()
     part_two()
 
 
 if __name__ == "__main__":
-    # tests()
+    tests()
     main()
