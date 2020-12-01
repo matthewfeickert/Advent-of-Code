@@ -1,10 +1,9 @@
 #!/usr/bin/env python3
-import numpy as np
 import csv
-import itertools
+from itertools import product
+from itertools import combinations
 from functools import reduce
 from operator import mul
-from itertools import combinations
 
 
 def load_input_file(path):
@@ -16,7 +15,7 @@ def test_data():
 
 
 def product_of_summands(inputs, target):
-    for pair in itertools.product(inputs, inputs[1:]):
+    for pair in product(inputs, inputs[1:]):
         if sum(pair) == target:
             return reduce(mul, pair)
 
