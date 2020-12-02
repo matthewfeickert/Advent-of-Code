@@ -45,16 +45,32 @@ def part_one():
     print(f"\n# Number of valid passwords: {answer}")
 
 
+def revalidate_data(data_dict):
+    if data_dict["key"] not in data_dict["token"]:
+        return False
+    lower_bound = data_dict["min"] - 1
+    upper_bound = data_dict["max"] - 1
+    key = data_dict["key"]
+    token = data_dict["token"]
+    return (token[lower_bound] == key) ^ (token[upper_bound] == key)
+
+
 def test_part_two():
-    pass
+    data = parse_data(test_data.copy())
+    validity = [revalidate_data(entry) for entry in data]
+    assert sum(validity) == 1
 
 
 def part_two():
-    pass
+    inputs = load_input_file("input.txt")
+    data = parse_data(inputs)
+    validity = [revalidate_data(entry) for entry in data]
+    answer = sum(validity)
+    print(f"\n# Number of valid passwords: {answer}")
 
 
 if __name__ == "__main__":
     test_part_one()
     part_one()
-    # test_part_two()
-    # part_two()
+    test_part_two()
+    part_two()
