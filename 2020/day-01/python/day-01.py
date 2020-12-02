@@ -9,8 +9,7 @@ def load_input_file(path):
         return [int(line.strip()) for line in input_file]
 
 
-def test_data():
-    return [1721, 979, 366, 299, 675, 1456]
+test_data = [1721, 979, 366, 299, 675, 1456]
 
 
 def product_of_ntuples(inputs, target, order):
@@ -21,7 +20,7 @@ def product_of_ntuples(inputs, target, order):
 
 
 def test_part_one():
-    assert product_of_ntuples(test_data(), 2020, 2) == 514579
+    assert product_of_ntuples(test_data, 2020, 2) == 514579
 
 
 def part_one():
@@ -31,7 +30,7 @@ def part_one():
 
 
 def test_part_two():
-    assert product_of_ntuples(test_data(), 2020, 3) == 241861950
+    assert product_of_ntuples(test_data, 2020, 3) == 241861950
 
 
 def part_two():
