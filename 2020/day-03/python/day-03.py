@@ -55,6 +55,7 @@ def test_part_two():
         )
         for h_shift, v_shift in shift_list
     ]
+    assert tree_counts == [2, 7, 3, 4, 2]
     assert reduce(mul, tree_counts) == 336
 
 
