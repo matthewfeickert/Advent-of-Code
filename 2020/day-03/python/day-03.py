@@ -9,19 +9,19 @@ def load_input_file(path):
         return [line.strip() for line in input_file]
 
 
-# test_data = """\
-# ..##.......
-# #...#...#..
-# .#....#..#.
-# ..#.#...#.#
-# .#...##..#.
-# ..#.##.....
-# .#.#.#....#
-# .#........#
-# #.##...#...
-# #...##....#
-# .#..#...#.#\
-# """
+test_data = """\
+..##.......
+#...#...#..
+.#....#..#.
+..#.#...#.#
+.#...##..#.
+..#.##.....
+.#.#.#....#
+.#........#
+#.##...#...
+#...##....#
+.#..#...#.#\
+"""
 
 
 def count_trees(data, horiz_shift, vert_shift, target="#"):
@@ -35,8 +35,7 @@ def count_trees(data, horiz_shift, vert_shift, target="#"):
 
 
 def test_part_one():
-    test_data = load_input_file("test_data.txt")
-    tree_count = count_trees(test_data, horiz_shift=3, vert_shift=1)
+    tree_count = count_trees(test_data.split(), horiz_shift=3, vert_shift=1)
     assert tree_count == 7
 
 
@@ -47,11 +46,10 @@ def part_one():
 
 
 def test_part_two():
-    test_data = load_input_file("test_data.txt")
     shift_list = [[1, 1], [3, 1], [5, 1], [7, 1], [1, 2]]
     tree_counts = [
         count_trees(
-            test_data,
+            test_data.split(),
             horiz_shift=h_shift,
             vert_shift=v_shift,
         )
