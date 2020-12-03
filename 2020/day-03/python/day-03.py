@@ -1,12 +1,7 @@
 #!/usr/bin/env python3
-
-import numpy as np
-
-# Notes:
-# Open: .
-# Tree: #
-
-# Slope: right 3, down 1
+# Faster than NumPy for small lists
+from functools import reduce
+from operator import mul
 
 
 def load_input_file(path):
@@ -33,7 +28,7 @@ def count_trees(data, horizontal_shift, vertical_shift, target="#"):
     cycle_length = len(data[0])
     cycle_postion = 0
     tree_list = []
-    for row in data[1::vertical_shift]:
+    for row in data[vertical_shift::vertical_shift]:
         cycle_postion = (cycle_postion + horizontal_shift) % cycle_length
         tree_list.append(row[cycle_postion])
     return tree_list.count(target)
@@ -66,7 +61,7 @@ def test_part_two():
                 target="#",
             )
         )
-    assert np.prod(tree_counts) == 336
+    assert reduce(mul, tree_counts) == 336
 
 
 def part_two():
@@ -82,8 +77,7 @@ def part_two():
                 target="#",
             )
         )
-    answer = np.prod(tree_counts)
-    print(tree_counts)
+    answer = reduce(mul, tree_counts)
     print(f"\n# Product of trees encountered: {answer}")
 
 
