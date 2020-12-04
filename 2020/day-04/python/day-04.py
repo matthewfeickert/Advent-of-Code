@@ -28,10 +28,6 @@ required_keys = ["byr", "iyr", "eyr", "hgt", "hcl", "ecl", "pid"]
 
 
 def create_passport(inputs):
-    # passport_keys = [
-    #     [pair.split(":")[0] for pair in input.split(" ")] for input in inputs
-    # ]
-    # passports = [{pair.split(":")[0],pair.split(":")[1] for pair in input.split(" ")} for input in inputs]
     passports = []
     for input in inputs:
         passport = {}
@@ -74,7 +70,7 @@ def validate_keys(passports):
         else:
             if hair_color[0] != "#":
                 continue
-        if port["ecl"] not in ["amd", "blu", "brn", "gry", "grn", "hzl", "oth"]:
+        if port["ecl"] not in ["amb", "blu", "brn", "gry", "grn", "hzl", "oth"]:
             continue
         if len(port["pid"]) != 9:
             continue
