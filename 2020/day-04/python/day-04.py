@@ -23,7 +23,6 @@ hcl:#cfa07d eyr:2025 pid:166559648
 iyr:2011 ecl:brn hgt:59in\
 """
 
-# required_keys = ["byr", "iyr", "eyr", "hgt", "hcl", "ecl", "pid", "cid"]
 required_keys = ["byr", "iyr", "eyr", "hgt", "hcl", "ecl", "pid"]
 
 
@@ -31,8 +30,8 @@ def create_passport(inputs):
     passports = []
     for input in inputs:
         passport = {}
-        for pair in input.split(" "):
-            key, value = pair.split(":")
+        for entry in input.split(" "):
+            key, value = entry.split(":")
             passport[key] = value
         passports.append(passport)
     return passports
