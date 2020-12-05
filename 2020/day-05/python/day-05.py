@@ -1,6 +1,3 @@
-from math import ceil
-
-
 def load_input_file(path):
     with open(path) as input_file:
         return [line.strip() for line in input_file]
@@ -10,32 +7,12 @@ test_data = ["FBFBBFFRLR", "BFFFBBFRRR", "FFFBBBFRRR", "BBFFBBFRLL"]
 
 
 def get_row_column(token):
-    row_range = [0, 127]
     row_token = token[:-3]
-    column_range = [0, 7]
-    column_token = token[-3:]
-
-    for char in row_token:
-        if char == "F":
-            # Take lower half
-            row_range[1] = row_range[0] + int((row_range[1] - row_range[0]) / 2)
-        elif char == "B":
-            # Take upper half
-            row_range[0] = row_range[0] + int(ceil((row_range[1] - row_range[0]) / 2))
-
-    for char in column_token:
-        if char == "L":
-            # Take left half
-            column_range[1] = column_range[0] + int(
-                (column_range[1] - column_range[0]) / 2
-            )
-        elif char == "R":
-            # Take right half
-            column_range[0] = column_range[0] + int(
-                ceil((column_range[1] - column_range[0]) / 2)
-            )
-
-    return row_range[0], column_range[0]
+    col_token = token[-3:]
+    # int(x, base=10), so use base=2 for binary
+    row = int(row_token.replace("F", "0").replace("B", "1"), base=2)
+    col = int(col_token.replace("L", "0").replace("R", "1"), base=2)
+    return row, col
 
 
 def get_seat_id(row, column, factor=8):
