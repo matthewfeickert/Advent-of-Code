@@ -1,4 +1,4 @@
-import math
+from math import ceil
 
 
 def load_input_file(path):
@@ -21,9 +21,7 @@ def get_row_column(token):
             row_range[1] = row_range[0] + int((row_range[1] - row_range[0]) / 2)
         elif char == "B":
             # Take upper half
-            row_range[0] = row_range[0] + int(
-                math.ceil((row_range[1] - row_range[0]) / 2)
-            )
+            row_range[0] = row_range[0] + int(ceil((row_range[1] - row_range[0]) / 2))
 
     for char in column_token:
         if char == "L":
@@ -34,7 +32,7 @@ def get_row_column(token):
         elif char == "R":
             # Take right half
             column_range[0] = column_range[0] + int(
-                math.ceil((column_range[1] - column_range[0]) / 2)
+                ceil((column_range[1] - column_range[0]) / 2)
             )
 
     return row_range[0], column_range[0]
@@ -58,21 +56,19 @@ def part_one():
     inputs = load_input_file("input.txt")
     rows, columns = zip(*[get_row_column(input) for input in inputs])
     seat_ids = [get_seat_id(row, column) for row, column in zip(rows, columns)]
-    print(f"\n# Answer: {max(seat_ids)}")
-
-
-def test_part_two():
-    pass
+    print(f"\n# Highest seat ID: {max(seat_ids)}")
 
 
 def part_two():
-    # inputs = load_input_file("input.txt")
-    # print(f"\n# Answer: {answer}")
-    pass
+    inputs = load_input_file("input.txt")
+    rows, columns = zip(*[get_row_column(input) for input in inputs])
+    seat_ids = sorted([get_seat_id(row, column) for row, column in zip(rows, columns)])
+    full_list = [x for x in range(seat_ids[0], seat_ids[-1] + 1)]
+    seat_id = set(full_list) - set(seat_ids)
+    print(f"\n# Seat ID: {seat_id.pop()}")
 
 
 if __name__ == "__main__":
     test_part_one()
     part_one()
-    # test_part_two()
-    # part_two()
+    part_two()
