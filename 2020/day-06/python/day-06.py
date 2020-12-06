@@ -4,25 +4,6 @@ def load_input_file(path):
         return [entry.replace("\n", " ").rstrip() for entry in entrys]
 
 
-test_data = """\
-abc
-
-a
-b
-c
-
-ab
-ac
-
-a
-a
-a
-a
-
-b\
-"""
-
-
 def get_unique(data):
     return "".join(list(set(data)))
 
