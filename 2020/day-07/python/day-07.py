@@ -1,4 +1,4 @@
-# import re
+import re
 
 
 def load_input_file(path):
@@ -18,66 +18,107 @@ faded blue bags contain no other bags.
 dotted black bags contain no other bags."""
 
 
-def parse_rules(data):
+def parse_inputs(data):
+    pattern = re.compile(
+        r"^(?P<outer_bag>.*?) bags? contain (?P<empty>no other bags)?\s?(?P<inner_bags>.*?)?\.$"  # noqa
+    )
+    bags_split = re.compile(
+        r"(?P<quantity>\d)?\s?(?P<color>[a-zA-Z\s]+?) bags?"
+    )  # noqa
+    inputs = []
+    for line in data:
+        match = pattern.match(line)
+        inputs.append(match.groupdict())
+        inputs[-1]["inner_bags"] = list(
+            map(
+                # lambda x: x.groupdict() if x else x,
+                lambda x: x.groupdict(),
+                bags_split.finditer(inputs[-1]["inner_bags"]),
+            )
+        )
+    return inputs
+
+
+def make_rules(data):
     rules = {}
     for line in data:
-        container, contents = line.rstrip(".").split("contain")
-        container = container.rstrip(" bags")
-        contents = contents.split(",")
-        # Do this with regex later
-        contents = [bag.lstrip(" ").rstrip(" bag") for bag in contents]
-        contents = [bag.lstrip(" ").rstrip(" bags") for bag in contents]
-        bags = [{"number": bag[0], "color": bag[2:]} for bag in contents]
-        rules[container] = bags
-    # return container, bags
+        rules[line["outer_bag"]] = {
+            "empty": line["empty"] is not None,
+            "inner_bags": {},
+        }
+        outer_bag = rules[line["outer_bag"]]
+        for inner_bag in line["inner_bags"]:
+            outer_bag["inner_bags"][inner_bag["color"]] = int(inner_bag["quantity"])
     return rules
 
 
-def can_hold_color(rules, bag_color):
-    count = 0
-    for color in rules:
-        # print(f"\nbag rule: {color}")
-        sub_bags = rules[color]
-        for bag in sub_bags:
-            # print(f"  sub bag: {bag}")
-            if bag["color"] == bag_color:
-                count += 1
-                # print(f"* {color} contains {bag_color}")
-            else:
-                # Avoiding regex issue
-                _contains = False
-                if bag["color"] in rules.keys():
-                    sub_sub_bags = rules[bag["color"]]
-                    # print(f"   sub sub bags: {sub_sub_bags}")
-                    for sub_bag in sub_sub_bags:
-                        if sub_bag["color"] == bag_color:
-                            # count += int(sub_bag["number"])
-                            _contains = True
-                            count += 1
-                            # print(f"* {color} sub bag contains {bag_color}")
-                            break
-                if _contains:
-                    break
-                    # count += 1
-                    # print(f"* {color} sub bag contains {bag_color}")
-    return count
+def can_hold(bag, outer_bag, rules):
+    if rules[outer_bag]["empty"]:
+        return False
+    if bag in rules[outer_bag]["inner_bags"]:
+        return True
+    for inner_bag in rules[outer_bag]["inner_bags"].keys():
+        if can_hold(bag, inner_bag, rules):
+            return True
+    return False
+
+
+def count_outer_bag(bag, rules):
+    return sum([can_hold(bag, outer_bag, rules) for outer_bag in rules.keys()])
 
 
 def test_part_one():
     inputs = load_input_file("test_data.txt")
-    # rules = [parse_rules(input) for input in inputs]
-    rules = parse_rules(inputs)
-    # print(rules)
-    # can_hold_color([rules[0]], "shiny gold")
-    count = can_hold_color(rules, "shiny gold")
-    print(count)
-    assert count == 4
+    parsed_inputs = parse_inputs(inputs)
+    rules = make_rules(parsed_inputs)
+
+    assert rules["light red"] == {
+        "empty": False,
+        "inner_bags": {"bright white": 1, "muted yellow": 2},
+    }
+    assert rules["dark orange"] == {
+        "empty": False,
+        "inner_bags": {"bright white": 3, "muted yellow": 4},
+    }
+    assert rules["bright white"] == {
+        "empty": False,
+        "inner_bags": {"shiny gold": 1},
+    }
+    assert rules["muted yellow"] == {
+        "empty": False,
+        "inner_bags": {"shiny gold": 2, "faded blue": 9},
+    }
+    assert rules["shiny gold"] == {
+        "empty": False,
+        "inner_bags": {"dark olive": 1, "vibrant plum": 2},
+    }
+    assert rules["dark olive"] == {
+        "empty": False,
+        "inner_bags": {"faded blue": 3, "dotted black": 4},
+    }
+    assert rules["vibrant plum"] == {
+        "empty": False,
+        "inner_bags": {"faded blue": 5, "dotted black": 6},
+    }
+
+    assert can_hold("shiny gold", "light red", rules)
+    assert can_hold("shiny gold", "dark orange", rules)
+    assert can_hold("shiny gold", "bright white", rules)
+    assert can_hold("shiny gold", "muted yellow", rules)
+    assert not can_hold("shiny gold", "shiny gold", rules)
+    assert not can_hold("shiny gold", "dark olive", rules)
+    assert not can_hold("shiny gold", "vibrant plum", rules)
+    assert not can_hold("shiny gold", "faded blue", rules)
+    assert not can_hold("shiny gold", "dotted black", rules)
+
+    assert count_outer_bag("shiny gold", rules) == 4
 
 
 def part_one():
     inputs = load_input_file("input.txt")
-    rules = parse_rules(inputs)
-    count = can_hold_color(rules, "shiny gold")
+    parsed_inputs = parse_inputs(inputs)
+    rules = make_rules(parsed_inputs)
+    count = count_outer_bag("shiny gold", rules)
     print(f"\n# Answer: {count}")
 
 
