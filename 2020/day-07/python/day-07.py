@@ -67,6 +67,16 @@ def count_outer_bag(bag, rules):
     return sum([can_hold(bag, outer_bag, rules) for outer_bag in rules.keys()])
 
 
+def count_inner_bags(outer_bag, rules):
+    total = 0
+    if rules[outer_bag]["empty"]:
+        return total
+    for inner_bag, quantity in rules[outer_bag]["inner_bags"].items():
+        total += quantity
+        total += quantity * count_inner_bags(inner_bag, rules)
+    return total
+
+
 def test_part_one():
     inputs = load_input_file("test_data.txt")
     parsed_inputs = parse_inputs(inputs)
@@ -123,17 +133,23 @@ def part_one():
 
 
 def test_part_two():
-    pass
+    inputs = load_input_file("test_data.txt")
+    parsed_inputs = parse_inputs(inputs)
+    rules = make_rules(parsed_inputs)
+    count = count_inner_bags("shiny gold", rules)
+    assert count == 32
 
 
 def part_two():
-    # inputs = load_input_file("input.txt")
-    # print(f"\n# Answer: {answer}")
-    pass
+    inputs = load_input_file("input.txt")
+    parsed_inputs = parse_inputs(inputs)
+    rules = make_rules(parsed_inputs)
+    count = count_inner_bags("shiny gold", rules)
+    print(f"\n# Answer: {count}")
 
 
 if __name__ == "__main__":
     test_part_one()
     part_one()
-    # test_part_two()
-    # part_two()
+    test_part_two()
+    part_two()
