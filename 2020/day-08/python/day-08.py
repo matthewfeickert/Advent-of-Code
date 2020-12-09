@@ -27,7 +27,9 @@ def execute_loop(inputs):
     accumulator = 0
     visited_idx = []
     idx = 0
-    while True:
+    end_idx = len(inputs) - 1
+    success = False
+    while not success:
         if inputs[idx]["op"] == "acc":
             if idx in visited_idx:
                 break
@@ -44,25 +46,53 @@ def execute_loop(inputs):
                 break
             visited_idx.append(idx)
             idx += 1
-    return accumulator
+
+        if idx == end_idx:
+            success = True
+    return accumulator, success
 
 
 def test_part_one():
     inputs = load_input_file("test_data.txt")
     ops_list = parse_inputs(inputs)
-    accumulator = execute_loop(ops_list)
+    accumulator, success = execute_loop(ops_list)
     assert accumulator == 5
 
 
 def part_one():
     inputs = load_input_file("input.txt")
     ops_list = parse_inputs(inputs)
-    accumulator = execute_loop(ops_list)
+    accumulator, success = execute_loop(ops_list)
     print(f"\n# Answer: {accumulator}")
 
 
+def fix_program(inputs):
+    new_inputs = None
+    # for idx in range(1, len(inputs)):
+    for idx in range(len(inputs) + 1):
+        print(idx, inputs[idx])
+        if inputs[idx]["op"] not in ["jmp", "nop"]:
+            continue
+
+        # test_inputs = inputs.copy()
+        test_inputs = [*inputs]
+        # test_inputs[idx]["op"] = "nop" if test_inputs[idx]["op"] == "jmp" else "jmp"
+        # test_inputs[idx]["op"] = "nop" if test_inputs[idx]["op"] == "jmp" else "nop"
+        if test_inputs[idx]["op"] == "jmp":
+            test_inputs[idx]["op"] = "nop"
+        elif test_inputs[idx]["op"] == "nop":
+            test_inputs[idx]["op"] = "jmp"
+        _, success = execute_loop(test_inputs)
+        if success:
+            new_inputs = test_inputs
+            return execute_loop(new_inputs)
+
+
 def test_part_two():
-    pass
+    inputs = load_input_file("test_data.txt")
+    ops_list = parse_inputs(inputs)
+    print(fix_program(ops_list))
+    # print(accumulator)
 
 
 def part_two():
@@ -74,5 +104,6 @@ def part_two():
 if __name__ == "__main__":
     test_part_one()
     part_one()
-    # test_part_two()
+    test_part_two()
     # part_two()
+    # 1205
