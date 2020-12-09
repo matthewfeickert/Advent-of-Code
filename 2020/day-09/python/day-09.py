@@ -1,4 +1,5 @@
 from itertools import permutations
+from itertools import combinations
 
 
 def load_input_file(path):
@@ -29,18 +30,31 @@ def part_one():
     print(f"\n# Answer: {answer}")
 
 
+def find_subrange(inputs, target):
+    idxs = list(range(len(inputs) + 1))
+    contiguous_sublists = [inputs[i:j] for i, j in combinations(idxs, 2)]
+    sublists = [list for list in contiguous_sublists if len(list) > 1]
+    for sublist in sublists:
+        if sum(sublist) == target:
+            return min(sublist) + max(sublist)
+
+
 def test_part_two():
-    pass
+    inputs = load_input_file("test_data.txt")
+    invalid_number = compute(inputs, preamble=5)
+    answer = find_subrange(inputs, invalid_number)
+    assert answer == 62
 
 
 def part_two():
-    # inputs = load_input_file("input.txt")
-    # print(f"\n# Answer: {answer}")
-    pass
+    inputs = load_input_file("input.txt")
+    invalid_number = compute(inputs, preamble=25)
+    answer = find_subrange(inputs, invalid_number)
+    print(f"\n# Answer: {answer}")
 
 
 if __name__ == "__main__":
     test_part_one()
     part_one()
-    # test_part_two()
-    # part_two()
+    test_part_two()
+    part_two()
