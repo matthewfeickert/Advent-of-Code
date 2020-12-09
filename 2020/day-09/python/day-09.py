@@ -6,7 +6,7 @@ def load_input_file(path):
         return [int(line.strip()) for line in input_file]
 
 
-def compute(inputs, preamble=None):
+def find_invalid_number(inputs, preamble=None):
     for idx, item in enumerate(inputs[preamble:]):
         available = inputs[idx : idx + preamble]  # noqa: E203
         sum_of_pairs = [sum(pair) for pair in permutations(available, r=2)]
@@ -16,13 +16,13 @@ def compute(inputs, preamble=None):
 
 def test_part_one():
     inputs = load_input_file("test_data.txt")
-    answer = compute(inputs, preamble=5)
+    answer = find_invalid_number(inputs, preamble=5)
     assert answer == 127
 
 
 def part_one():
     inputs = load_input_file("input.txt")
-    answer = compute(inputs, preamble=25)
+    answer = find_invalid_number(inputs, preamble=25)
     print(f"\n# First number not in sums of preamble: {answer}")
 
 
@@ -41,14 +41,14 @@ def min_max_sum(data):
 
 def test_part_two():
     inputs = load_input_file("test_data.txt")
-    invalid_number = compute(inputs, preamble=5)
+    invalid_number = find_invalid_number(inputs, preamble=5)
     answer = min_max_sum(find_subrange(inputs, invalid_number))
     assert answer == 62
 
 
 def part_two():
     inputs = load_input_file("input.txt")
-    invalid_number = compute(inputs, preamble=25)
+    invalid_number = find_invalid_number(inputs, preamble=25)
     answer = min_max_sum(find_subrange(inputs, invalid_number))
     print(f"\n# Sum of min and max of subrange: {answer}")
 
