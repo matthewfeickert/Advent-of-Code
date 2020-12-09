@@ -68,20 +68,12 @@ def part_one():
 
 def fix_program(inputs):
     new_inputs = None
-    # for idx in range(1, len(inputs)):
-    for idx in range(len(inputs) + 1):
-        print(idx, inputs[idx])
+    for idx in range(len(inputs)):
         if inputs[idx]["op"] not in ["jmp", "nop"]:
             continue
 
-        # test_inputs = inputs.copy()
-        test_inputs = [*inputs]
-        # test_inputs[idx]["op"] = "nop" if test_inputs[idx]["op"] == "jmp" else "jmp"
-        # test_inputs[idx]["op"] = "nop" if test_inputs[idx]["op"] == "jmp" else "nop"
-        if test_inputs[idx]["op"] == "jmp":
-            test_inputs[idx]["op"] = "nop"
-        elif test_inputs[idx]["op"] == "nop":
-            test_inputs[idx]["op"] = "jmp"
+        test_inputs = inputs.copy()
+        test_inputs[idx]["op"] = "nop" if test_inputs[idx]["op"] == "jmp" else "jmp"
         _, success = execute_loop(test_inputs)
         if success:
             new_inputs = test_inputs
