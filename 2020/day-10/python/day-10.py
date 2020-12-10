@@ -32,18 +32,37 @@ def part_one():
     print(f"\n# Number of 1-jolt diffs times 3-jolt diffs: {answer}")
 
 
+def count_permutations(inputs, offset):
+    adapters = sorted(inputs)
+    adapters.insert(0, 0)
+
+    step_sizes = [x + 1 for x in range(offset)]
+    list_len = adapters[-1] + offset
+    ways = [1] + [0] * list_len
+
+    for value in adapters[1:] + [list_len]:
+        ways[value] = sum([ways[value - step] for step in step_sizes])
+    return ways[-1]
+
+
 def test_part_two():
-    pass
+    inputs = load_input_file("test_data_1.txt")
+    ways = count_permutations(inputs, offset=3)
+    assert ways == 8
+
+    inputs = load_input_file("test_data_2.txt")
+    ways = count_permutations(inputs, offset=3)
+    assert ways == 19208
 
 
 def part_two():
-    # inputs = load_input_file("input.txt")
-    # print(f"\n# Answer: {answer}")
-    pass
+    inputs = load_input_file("input.txt")
+    answer = count_permutations(inputs, offset=3)
+    print(f"\n# Distinct ways to arrange adapters: {answer}")
 
 
 if __name__ == "__main__":
     test_part_one()
     part_one()
-    # test_part_two()
-    # part_two()
+    test_part_two()
+    part_two()
