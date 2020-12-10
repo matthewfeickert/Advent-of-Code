@@ -5,15 +5,9 @@ def load_input_file(path):
 
 def find_chain(inputs, offset):
     adapters = sorted(inputs)
-    ground_jolatage = 0
-    joltage_diffs = [adapters[0] - ground_jolatage]
-    for i, j in zip(adapters, adapters[1:]):
-        joltage_diff = j - i
-        if joltage_diff <= offset:
-            joltage_diffs.append(joltage_diff)
-        else:
-            print("ERROR")
-
+    ground = 0
+    joltage_diffs = [adapters[0] - ground]
+    joltage_diffs += [j - i for i, j in zip(adapters, adapters[1:])]
     joltage_diffs.append(offset)
     return joltage_diffs
 
