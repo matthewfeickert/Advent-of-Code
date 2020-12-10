@@ -34,13 +34,35 @@ def part_one():
 
 def count_permutations(inputs, offset):
     ratings = sorted(inputs)
-    ratings.append(ratings[-1] + offset)
 
     step_sizes = [x + 1 for x in range(offset)]
     ways = [1] + [0] * ratings[-1]
 
+    # Number of ways to have reached index equal to rating value
+    # is the sum of the ways to have previously reached indices
+    # that are _within stepping distance_ of the current index.
+    # (There is only one way to get from the last rating to your device
+    # so don't need to factor that in.)
+    # Example:
+    # ratings = [1, 4, 5, 6, 7]
+    # 0: [1] # Implicit
+    # 1: [1, 1]
+    #     0 -> 1
+    # 4: [1, 1, 0, 0, 1]
+    #     0 -> 1 -> 4
+    # 5: [1, 1, 0, 0, 1, 1]
+    #     0 -> 1 -> 4 -> 5
+    # 6: [1, 1, 0, 0, 1, 1, 2]
+    #     0 -> 1 -> 4 -> 5 -> 6
+    #     0 -> 1 -> 4 -> 6
+    # 7: [1, 1, 0, 0, 1, 1, 2, 4]
+    #     0 -> 1 -> 4 -> 5 -> 6 -> 7
+    #     0 -> 1 -> 4 -> 6 -> 7
+    #     0 -> 1 -> 4 -> 5 -> 7
+    #     0 -> 1 -> 4 -> 7
     for idx in ratings:
         ways[idx] = sum([ways[idx - step] for step in step_sizes])
+        # print(idx, ways)
     return ways[-1]
 
 
