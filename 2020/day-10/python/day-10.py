@@ -39,8 +39,8 @@ def count_permutations(inputs, offset):
     step_sizes = [x + 1 for x in range(offset)]
     ways = [1] + [0] * ratings[-1]
 
-    for value in ratings:
-        ways[value] = sum([ways[value - step] for step in step_sizes])
+    for idx in ratings:
+        ways[idx] = sum([ways[idx - step] for step in step_sizes])
     return ways[-1]
 
 
