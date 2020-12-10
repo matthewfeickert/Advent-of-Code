@@ -4,10 +4,10 @@ def load_input_file(path):
 
 
 def find_chain(inputs, offset):
-    adapters = sorted(inputs)
+    ratings = sorted(inputs)
     ground = 0
-    joltage_diffs = [adapters[0] - ground]
-    joltage_diffs += [j - i for i, j in zip(adapters, adapters[1:])]
+    joltage_diffs = [ratings[0] - ground]
+    joltage_diffs += [j - i for i, j in zip(ratings, ratings[1:])]
     joltage_diffs.append(offset)
     return joltage_diffs
 
@@ -33,14 +33,13 @@ def part_one():
 
 
 def count_permutations(inputs, offset):
-    adapters = sorted(inputs)
-    adapters.insert(0, 0)
+    ratings = sorted(inputs)
+    ratings.append(ratings[-1] + offset)
 
     step_sizes = [x + 1 for x in range(offset)]
-    list_len = adapters[-1] + offset
-    ways = [1] + [0] * list_len
+    ways = [1] + [0] * ratings[-1]
 
-    for value in adapters[1:] + [list_len]:
+    for value in ratings:
         ways[value] = sum([ways[value - step] for step in step_sizes])
     return ways[-1]
 
