@@ -38,7 +38,7 @@ def get_adjacent(seat, seats):
     return seats_adjacent
 
 
-def apply_rules(data):
+def apply_rules(data, tolerance=4):
     # Need to apply simultaneously
     new_seats = deepcopy(data)
     for row_idx, row in enumerate(data):
@@ -49,7 +49,7 @@ def apply_rules(data):
                     new_seats[row_idx][seat_idx] = "#"
             # Vacate if too full
             if data[row_idx][seat_idx] == "#":
-                if get_adjacent((row_idx, seat_idx), data).count("#") >= 4:
+                if get_adjacent((row_idx, seat_idx), data).count("#") >= tolerance:
                     new_seats[row_idx][seat_idx] = "L"
     return new_seats
 
@@ -60,13 +60,13 @@ def print_seats(seats_a, seats_b):
         print("".join(row_a), "   ", "".join(row_b))
 
 
-def converged_seat_map(seats):
+def converged_seat_map(seats, tolerance):
     seat_history = [deepcopy(seats)]
     converged = False
 
     new_seats = deepcopy(seats)
     while not converged:
-        new_seats = apply_rules(new_seats)
+        new_seats = apply_rules(new_seats, tolerance)
         # print_seats(seat_history[-1], new_seats)
         if new_seats == seat_history[-1]:
             converged = True
@@ -92,13 +92,35 @@ def part_one():
     inputs = load_input_file("input.txt")
     seats = [list(row) for row in inputs]
 
-    converged_map = converged_seat_map(seats)
+    converged_map = converged_seat_map(seats, tolerance=4)
     occupied_seats = sum([row.count("#") for row in converged_map])
+    assert occupied_seats == 2126
     print(f"\n# Answer: {occupied_seats}")
 
 
+def apply_rules_two(data, tolerance=5):
+    # Need to apply simultaneously
+    new_seats = deepcopy(data)
+    for row_idx, row in enumerate(data):
+        for seat_idx, seat in enumerate(row):
+            # Occupy if empty
+            if data[row_idx][seat_idx] == "L":
+                if get_adjacent((row_idx, seat_idx), data).count("#") == 0:
+                    new_seats[row_idx][seat_idx] = "#"
+            # Vacate if too full
+            if data[row_idx][seat_idx] == "#":
+                if get_adjacent((row_idx, seat_idx), data).count("#") >= tolerance:
+                    new_seats[row_idx][seat_idx] = "L"
+    return new_seats
+
+
 def test_part_two():
-    pass
+    inputs = load_input_file("test_data.txt")
+    seats = [list(row) for row in inputs]
+
+    converged_map = converged_seat_map(seats, tolerance=5)
+    occupied_seats = sum([row.count("#") for row in converged_map])
+    assert occupied_seats == 26
 
 
 def part_two():
@@ -108,7 +130,7 @@ def part_two():
 
 
 if __name__ == "__main__":
-    test_part_one()
-    part_one()
-    # test_part_two()
+    # test_part_one()
+    # part_one()
+    test_part_two()
     # part_two()
