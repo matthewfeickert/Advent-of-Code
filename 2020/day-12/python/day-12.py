@@ -1,13 +1,28 @@
+import re
+
+
 def load_input_file(path):
     with open(path) as input_file:
         return [line.strip() for line in input_file]
 
 
-test_data = [None]
+def parse_actions(data):
+    actions = []
+    for action in data:
+        split_char = re.search("[A-Z]+", action).group(0)
+        actions.append([split_char, action.split(split_char)[-1]])
+    return actions
 
 
 def test_part_one():
-    pass
+    inputs = load_input_file("test_data.txt")
+    actions = parse_actions(inputs)
+    print(actions)
+
+
+def execute_action(action, coords):
+    long, lat = coords
+    direction, distance = action
 
 
 def part_one():
