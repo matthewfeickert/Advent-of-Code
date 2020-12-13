@@ -14,91 +14,91 @@ def parse_actions(data):
     return actions
 
 
+def manhattan_distance(position):
+    return int(sum([abs(position.real), abs(position.imag)]))
+
+
+def update(coord, action, value, step=0 + 0j):
+    if action == "F":
+        return coord + value * step
+    elif action == "N":
+        return coord + value * 1j
+    elif action == "S":
+        return coord + value * -1j
+    elif action == "E":
+        return coord + value * 1
+    elif action == "W":
+        return coord + value * -1
+    elif action == "L":
+        return coord * ((1j) ** (value // 90))
+    elif action == "R":
+        return coord * ((-1j) ** (value // 90))
+
+
+def move(position, direction, actions):
+    for action, value in actions:
+        if action in "FNSEW":
+            position = update(position, action, value, step=direction)
+        elif action in "LR":
+            direction = update(direction, action, value)
+    return position
+
+
+def move_waypoint(position, waypoint, actions):
+    for action, value in actions:
+        if action in "F":
+            position = update(position, action, value, step=waypoint)
+        elif action in "NSEWLR":
+            waypoint = update(waypoint, action, value)
+    return position
+
+
 def test_part_one():
     inputs = load_input_file("test_data.txt")
     actions = parse_actions(inputs)
-    facing = "E"
-    coords = (0, 0)
 
-    assert execute_action(["L", 180], ("E", (0, 0))) == execute_action(
-        ["R", 180], ("E", (0, 0))
-    )
-    recorded_positions = []
-    for action in actions:
-        facing, coords = execute_action(action, (facing, coords))
-        recorded_positions.append([facing, coords])
-    assert recorded_positions == [
-        ["E", (10, 0)],
-        ["E", (10, 3)],
-        ["E", (17, 3)],
-        ["S", (17, 3)],
-        ["S", (17, -8)],
-    ]
-    answer = sum([abs(x) for x in coords])
+    position = 0 + 0j  # Origin
+    direction = 1 + 0j  # Face east
+    position = move(position, direction, actions)
+    answer = manhattan_distance(position)
     assert answer == 25
-
-
-def execute_action(action, state):
-    facing, (long, lat) = state
-    direction, distance = action
-    cardinal_directions = ["N", "E", "S", "W"]
-
-    if direction == "N":
-        lat += distance
-    if direction == "S":
-        lat -= distance
-    if direction == "E":
-        long += distance
-    if direction == "W":
-        long -= distance
-    if direction in ["L", "R"]:
-        rotation = int(distance / 90)
-        if direction == "L":
-            new_idx = (cardinal_directions.index(facing) - rotation) % len(
-                cardinal_directions
-            )
-        else:
-            new_idx = (cardinal_directions.index(facing) + rotation) % len(
-                cardinal_directions
-            )
-        facing = cardinal_directions[new_idx]
-    if direction == "F":
-        if facing == "N":
-            lat += distance
-        elif facing == "S":
-            lat -= distance
-        elif facing == "E":
-            long += distance
-        elif facing == "W":
-            long -= distance
-
-    return facing, (long, lat)
 
 
 def part_one():
     inputs = load_input_file("input.txt")
     actions = parse_actions(inputs)
-    facing = "E"
-    coords = (0, 0)
 
-    for action in actions:
-        facing, coords = execute_action(action, (facing, coords))
-    answer = sum([abs(x) for x in coords])
+    position = 0 + 0j  # Origin
+    direction = 1 + 0j  # Face east
+    position = move(position, direction, actions)
+    answer = manhattan_distance(position)
     print(f"\n# Manhattan distance: {answer}")
 
 
 def test_part_two():
-    pass
+    inputs = load_input_file("test_data.txt")
+    actions = parse_actions(inputs)
+
+    position = 0 + 0j  # Origin
+    waypoint = 10 + 1j
+    position = move_waypoint(position, waypoint, actions)
+    answer = manhattan_distance(position)
+    assert answer == 286
 
 
 def part_two():
-    # inputs = load_input_file("input.txt")
-    # print(f"\n# Answer: {answer}")
-    pass
+    inputs = load_input_file("input.txt")
+    actions = parse_actions(inputs)
+
+    position = 0 + 0j  # Origin
+    waypoint = 10 + 1j
+    position = move_waypoint(position, waypoint, actions)
+    answer = manhattan_distance(position)
+    print(f"\n# Manhattan distance: {answer}")
 
 
 if __name__ == "__main__":
     test_part_one()
     part_one()
-    # test_part_two()
-    # part_two()
+    test_part_two()
+    part_two()
