@@ -5,11 +5,12 @@ def load_input_file(path):
 
 def parse_inputs(inputs):
     timestamp = int(inputs[0])
-    bus_ids = [int(id) for id in inputs[1].split(",") if id != "x"]
+    bus_ids = [int(id) if id != "x" else -1 for id in inputs[1].split(",")]
     return timestamp, bus_ids
 
 
 def earliest_time(timestamp, ids):
+    ids = [id for id in ids if id != -1]
     quotients = [timestamp // id for id in ids]
     depart_time = [(q * id) + id for q, id in zip(quotients, ids)]
     min_depart_time = min(depart_time)
