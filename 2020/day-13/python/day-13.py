@@ -1,6 +1,3 @@
-import math
-
-
 def load_input_file(path):
     with open(path) as input_file:
         return [line.strip() for line in input_file]
@@ -13,8 +10,8 @@ def parse_inputs(inputs):
 
 
 def earliest_time(timestamp, ids):
-    dividend = [math.floor(timestamp / id) for id in ids]
-    depart_time = [(main * id) + id for main, id in zip(dividend, ids)]
+    quotients = [timestamp // id for id in ids]
+    depart_time = [(q * id) + id for q, id in zip(quotients, ids)]
     min_depart_time = min(depart_time)
     min_depart_idx = depart_time.index(min_depart_time)
 
