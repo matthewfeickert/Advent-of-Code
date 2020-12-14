@@ -21,6 +21,20 @@ def earliest_time(timestamp, ids):
     return earliest_bus_id * wait_time
 
 
+def find_time(ids):
+    # c.f. https://en.wikipedia.org/wiki/Chinese_remainder_theorem
+    # use product of solved busses as step
+    bus_offsets = sorted([(idx, offset) for offset, idx in enumerate(ids) if idx != -1])
+    depart, offset = bus_offsets.pop()
+    next_time = depart - offset
+
+    for trip_time, wait_time in reversed(bus_offsets):
+        while (next_time + wait_time) % trip_time:
+            next_time += depart
+        depart *= trip_time
+    return next_time
+
+
 def test_part_one():
     inputs = load_input_file("test_data.txt")
     timestamp, bus_ids = parse_inputs(inputs)
@@ -35,17 +49,24 @@ def part_one():
 
 
 def test_part_two():
-    pass
+    inputs = load_input_file("test_data.txt")
+    timestamp, bus_ids = parse_inputs(inputs)
+    assert find_time([17, -1, 13, 19]) == 3417
+    assert find_time([67, 7, 59, 61]) == 754018
+    assert find_time([67, -1, 7, 59, 61]) == 779210
+    assert find_time([67, 7, -1, 59, 61]) == 1261476
+    assert find_time([1789, 37, 47, 1889]) == 1202161486
 
 
 def part_two():
-    # inputs = load_input_file("input.txt")
-    # print(f"\n# Answer: {answer}")
-    pass
+    inputs = load_input_file("input.txt")
+    _, bus_ids = parse_inputs(inputs)
+    answer = find_time(bus_ids)
+    print(f"\n# Part two answer: {answer}")
 
 
 if __name__ == "__main__":
     test_part_one()
     part_one()
-    # test_part_two()
-    # part_two()
+    test_part_two()
+    part_two()
