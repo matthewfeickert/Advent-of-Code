@@ -61,7 +61,7 @@ def count_permutations(inputs, offset):
     #     0 -> 1 -> 4 -> 5 -> 7
     #     0 -> 1 -> 4 -> 7
     for idx in ratings:
-        ways[idx] = sum([ways[idx - step] for step in step_sizes])
+        ways[idx] = sum(ways[idx - step] for step in step_sizes)
         # print(idx, ways)
     return ways[-1]
 
