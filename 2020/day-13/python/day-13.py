@@ -24,7 +24,7 @@ def earliest_time(timestamp, ids):
 def find_time(ids):
     # c.f. https://en.wikipedia.org/wiki/Chinese_remainder_theorem
     # use product of solved busses as step
-    bus_offsets = sorted([(idx, offset) for offset, idx in enumerate(ids) if idx != -1])
+    bus_offsets = sorted((idx, offset) for offset, idx in enumerate(ids) if idx != -1)
     depart, offset = bus_offsets.pop()
     next_time = depart - offset
 

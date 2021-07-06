@@ -39,7 +39,7 @@ def part_one():
 def part_two():
     inputs = load_input_file("input.txt")
     rows, columns = zip(*[get_row_column(input) for input in inputs])
-    seat_ids = sorted([get_seat_id(row, column) for row, column in zip(rows, columns)])
+    seat_ids = sorted(get_seat_id(row, column) for row, column in zip(rows, columns))
     full_list = [x for x in range(seat_ids[0], seat_ids[-1] + 1)]
     seat_id = set(full_list) - set(seat_ids)
     print(f"\n# Seat ID: {seat_id.pop()}")
