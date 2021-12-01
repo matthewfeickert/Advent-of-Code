@@ -13,6 +13,15 @@ def count_increases(inputs):
     return sum(inputs[step] > inputs[step - 1] for step in range(len(inputs)))
 
 
+def sliding_window_count(inputs, width=3):
+    sum_list = [
+        sum(inputs[step : step + width])  # noqa: E203
+        for step in range(len(inputs) - (width - 1))
+    ]
+
+    return sum(sum_list[step] > sum_list[step - 1] for step in range(len(sum_list)))
+
+
 def test_part_one():
     assert count_increases(test_data) == 7
 
@@ -23,18 +32,18 @@ def part_one():
     print(f"\n# Measurements larger than the previous measurement: {answer}")
 
 
-# def test_part_two():
-#     assert product_of_ntuples(test_data, 2020, 3) == 241861950
+def test_part_two():
+    assert sliding_window_count(test_data) == 5
 
 
-# def part_two():
-#     inputs = load_input_file("input.txt")
-#     answer = product_of_ntuples(inputs, target=2020, order=3)
-#     print(f"\n# Product of tripplet is: {answer}")
+def part_two():
+    inputs = load_input_file("../input.txt")
+    answer = sliding_window_count(inputs, width=3)
+    print(f"\n# Sums larger than the previous sum: {answer}")
 
 
 if __name__ == "__main__":
     test_part_one()
     part_one()
-    # test_part_two()
-    # part_two()
+    test_part_two()
+    part_two()
