@@ -20,7 +20,7 @@ def test_part_one():
 
 
 def part_one():
-    inputs = load_input_file("../input.txt")
+    inputs = load_input_file("input.txt")
     answer = count_increases(inputs, width=1)
     print(f"\n# Measurements larger than the previous measurement: {answer}")
 
@@ -30,7 +30,7 @@ def test_part_two():
 
 
 def part_two():
-    inputs = load_input_file("../input.txt")
+    inputs = load_input_file("input.txt")
     answer = count_increases(inputs, width=3)
     print(f"\n# Sums larger than the previous sum: {answer}")
 
