@@ -9,36 +9,29 @@ def load_input_file(path):
 test_data = [199, 200, 208, 210, 200, 207, 240, 269, 260, 263]
 
 
-def count_increases(inputs):
-    return sum(inputs[step] > inputs[step - 1] for step in range(len(inputs)))
-
-
-def sliding_window_count(inputs, width=3):
-    sum_list = [
-        sum(inputs[step : step + width])  # noqa: E203
-        for step in range(len(inputs) - (width - 1))
-    ]
-
-    return sum(sum_list[step] > sum_list[step - 1] for step in range(len(sum_list)))
+def count_increases(inputs, width=1):
+    return sum(
+        inputs[step] > inputs[step - width] for step in range(width, len(inputs))
+    )
 
 
 def test_part_one():
-    assert count_increases(test_data) == 7
+    assert count_increases(test_data, width=1) == 7
 
 
 def part_one():
     inputs = load_input_file("../input.txt")
-    answer = count_increases(inputs)
+    answer = count_increases(inputs, width=1)
     print(f"\n# Measurements larger than the previous measurement: {answer}")
 
 
 def test_part_two():
-    assert sliding_window_count(test_data) == 5
+    assert count_increases(test_data, width=3) == 5
 
 
 def part_two():
     inputs = load_input_file("../input.txt")
-    answer = sliding_window_count(inputs, width=3)
+    answer = count_increases(inputs, width=3)
     print(f"\n# Sums larger than the previous sum: {answer}")
 
 
