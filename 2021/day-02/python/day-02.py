@@ -3,40 +3,60 @@
 
 def load_input_file(path):
     with open(path) as input_file:
-        return [int(line.strip()) for line in input_file]
+        data = [line.strip().split(" ") for line in input_file]
+        return [(entry[0], int(entry[1])) for entry in data]
 
 
-test_data = [199, 200, 208, 210, 200, 207, 240, 269, 260, 263]
+test_string = """\
+forward 5
+down 5
+forward 8
+up 3
+down 8
+forward 2\
+"""
+test_data = [line.split(" ") for line in test_string.split("\n")]
+test_data = [(entry[0], int(entry[1])) for entry in test_data]
 
 
-def count_increases(inputs, width=1):
-    return sum(
-        inputs[step] > inputs[step - width] for step in range(width, len(inputs))
-    )
+def calculate_position(inputs):
+    horizontal = 0
+    depth = 0
+    for direction, distance in inputs:
+        if direction == "down":
+            depth += distance
+        elif direction == "forward":
+            horizontal += distance
+        else:
+            depth -= distance
+    return horizontal, depth
 
 
 def test_part_one():
-    assert count_increases(test_data, width=1) == 7
+    horizontal, depth = calculate_position(test_data)
+    assert horizontal, depth == (15, 10)
+    assert horizontal * depth == 150
 
 
 def part_one():
     inputs = load_input_file("input.txt")
-    answer = count_increases(inputs, width=1)
-    print(f"\n# Measurements larger than the previous measurement: {answer}")
+    horizontal, depth = calculate_position(inputs)
+    answer = horizontal * depth
+    print(f"\n# Product of final horizontal position and final depth: {answer}")
 
 
-def test_part_two():
-    assert count_increases(test_data, width=3) == 5
+# def test_part_two():
+#     assert count_increases(test_data, width=3) == 5
 
 
-def part_two():
-    inputs = load_input_file("input.txt")
-    answer = count_increases(inputs, width=3)
-    print(f"\n# Sums larger than the previous sum: {answer}")
+# def part_two():
+#     inputs = load_input_file("input.txt")
+#     answer = count_increases(inputs, width=3)
+#     print(f"\n# Sums larger than the previous sum: {answer}")
 
 
 if __name__ == "__main__":
     test_part_one()
     part_one()
-    test_part_two()
-    part_two()
+    # test_part_two()
+    # part_two()
