@@ -1,10 +1,14 @@
 #!/usr/bin/env python3
 
 
+def process_input(input):
+    data = [line.split(" ") for line in input.splitlines()]
+    return [(entry[0], int(entry[1])) for entry in data]
+
+
 def load_input_file(path):
     with open(path) as input_file:
-        data = [line.strip().split(" ") for line in input_file]
-        return [(entry[0], int(entry[1])) for entry in data]
+        return process_input(input_file.read())
 
 
 test_string = """\
@@ -15,13 +19,13 @@ up 3
 down 8
 forward 2\
 """
-test_data = [line.split(" ") for line in test_string.split("\n")]
-test_data = [(entry[0], int(entry[1])) for entry in test_data]
+test_data = process_input(test_string)
 
 
 def calculate_position(inputs):
     horizontal = 0
     depth = 0
+
     for direction, distance in inputs:
         if direction == "down":
             depth += distance
@@ -29,6 +33,7 @@ def calculate_position(inputs):
             horizontal += distance
         else:
             depth -= distance
+
     return horizontal, depth
 
 
@@ -45,31 +50,32 @@ def part_one():
     print(f"\n# Product of final horizontal position and final depth: {answer}")
 
 
-def calculate_aim(inputs):
+def calculate_aim_posiiton(inputs):
     horizontal = 0
     depth = 0
     aim = 0
 
-    for direction, distance in inputs:
+    for direction, value in inputs:
         if direction == "down":
-            aim += distance
+            aim += value
         elif direction == "up":
-            aim -= distance
+            aim -= value
         else:
-            horizontal += distance
-            depth += aim * distance
+            horizontal += value
+            depth += aim * value
+
     return horizontal, depth
 
 
 def test_part_two():
-    horizontal, depth = calculate_aim(test_data)
+    horizontal, depth = calculate_aim_posiiton(test_data)
     assert horizontal, depth == (15, 60)
     assert horizontal * depth == 900
 
 
 def part_two():
     inputs = load_input_file("input.txt")
-    horizontal, depth = calculate_aim(inputs)
+    horizontal, depth = calculate_aim_posiiton(inputs)
     answer = horizontal * depth
     print(f"\n# Product of final horizontal position and final depth: {answer}")
 
