@@ -45,18 +45,37 @@ def part_one():
     print(f"\n# Product of final horizontal position and final depth: {answer}")
 
 
-# def test_part_two():
-#     assert count_increases(test_data, width=3) == 5
+def calculate_aim(inputs):
+    horizontal = 0
+    depth = 0
+    aim = 0
+
+    for direction, distance in inputs:
+        if direction == "down":
+            aim += distance
+        elif direction == "up":
+            aim -= distance
+        else:
+            horizontal += distance
+            depth += aim * distance
+    return horizontal, depth
 
 
-# def part_two():
-#     inputs = load_input_file("input.txt")
-#     answer = count_increases(inputs, width=3)
-#     print(f"\n# Sums larger than the previous sum: {answer}")
+def test_part_two():
+    horizontal, depth = calculate_aim(test_data)
+    assert horizontal, depth == (15, 60)
+    assert horizontal * depth == 900
+
+
+def part_two():
+    inputs = load_input_file("input.txt")
+    horizontal, depth = calculate_aim(inputs)
+    answer = horizontal * depth
+    print(f"\n# Product of final horizontal position and final depth: {answer}")
 
 
 if __name__ == "__main__":
     test_part_one()
     part_one()
-    # test_part_two()
-    # part_two()
+    test_part_two()
+    part_two()
