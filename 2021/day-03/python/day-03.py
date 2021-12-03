@@ -24,31 +24,34 @@ test_string = """\
 test_data = process_input(test_string)
 
 
-def calculate_rates_in_decimal(inputs):
-    epsilon = None
-    delta = None
-    bits = []
-    for index in range(len(inputs[0])):
-        column = [x[index] for x in inputs]
-        bits.append(max(column, key=column.count))
-    epsilon = int("".join(bits), base=2)
-    delta_bits = "".join([str(1 - int(x)) for x in bits])
-    delta = int("".join(delta_bits), base=2)
+def get_rates(inputs):
+    gamma_rate = ""
+    epsilon_rate = ""
 
-    return epsilon, delta
+    for column in zip(*inputs):
+        ones_count = column.count("1")
+        zero_count = len(column) - ones_count
+
+        gamma_rate += "1" if ones_count >= zero_count else "0"
+        epsilon_rate += "0" if ones_count >= zero_count else "1"
+
+    gamma_rate = int(gamma_rate, base=2)
+    epsilon_rate = int(epsilon_rate, base=2)
+
+    return gamma_rate, epsilon_rate
 
 
 def test_part_one():
-    epsilon, delta = calculate_rates_in_decimal(test_data)
-    assert epsilon, delta == (22, 9)
-    assert epsilon * delta == 198
+    gamma, epsilon = get_rates(test_data)
+    assert gamma, epsilon == (22, 9)
+    assert gamma * epsilon == 198
 
 
 def part_one():
     inputs = load_input_file("input.txt")
-    epsilon, delta = calculate_rates_in_decimal(inputs)
-    answer = epsilon * delta
-    print(f"\n# Answer: {answer}")
+    gamma, epsilon = get_rates(inputs)
+    answer = gamma * epsilon
+    print(f"\n# Power consumption: {answer}")
 
 
 def oxygen_generation(inputs):
