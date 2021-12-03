@@ -2,11 +2,6 @@ def process_input(input):
     return input.splitlines()
 
 
-# def load_input_file(path):
-#     with open(path) as input_file:
-#         return [line.strip() for line in input_file]
-
-
 def load_input_file(path):
     with open(path) as input_file:
         return process_input(input_file.read())
