@@ -56,11 +56,11 @@ def gas_rates(inputs, gas):
 
     rate_type = 0 if gas == "oxygen" else 1
 
-    idx = 0
+    bit_position = 0
     while len(numbers) > 1:
-        bit_key = get_rates(numbers)[rate_type][idx]
-        numbers = [number for number in numbers if number[idx] == bit_key]
-        idx += 1
+        bit_criteria = get_rates(numbers)[rate_type][bit_position]
+        numbers = [number for number in numbers if number[bit_position] == bit_criteria]
+        bit_position += 1
 
     return int(numbers[0], base=2)
 
