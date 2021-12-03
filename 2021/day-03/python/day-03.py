@@ -35,70 +35,49 @@ def get_rates(inputs):
         gamma_rate += "1" if ones_count >= zero_count else "0"
         epsilon_rate += "0" if ones_count >= zero_count else "1"
 
-    gamma_rate = int(gamma_rate, base=2)
-    epsilon_rate = int(epsilon_rate, base=2)
-
     return gamma_rate, epsilon_rate
 
 
 def test_part_one():
-    gamma, epsilon = get_rates(test_data)
+    gamma, epsilon = list(map(lambda x: int(x, base=2), get_rates(test_data)))
     assert gamma, epsilon == (22, 9)
     assert gamma * epsilon == 198
 
 
 def part_one():
     inputs = load_input_file("input.txt")
-    gamma, epsilon = get_rates(inputs)
+    gamma, epsilon = list(map(lambda x: int(x, base=2), get_rates(inputs)))
     answer = gamma * epsilon
     print(f"\n# Power consumption: {answer}")
 
 
-def oxygen_generation(inputs):
+def gas_rates(inputs, gas):
     numbers = inputs.copy()
-    for index in range(len(numbers[0])):
-        column = [x[index] for x in numbers]
 
-        bit_key = "1" if column.count("1") >= column.count("0") else "0"
+    rate_type = 0 if gas == "oxygen" else 1
 
-        remove_list = [number for number in numbers if number[index] != bit_key]
-        for number in remove_list:
-            numbers.remove(number)
-        if len(numbers) == 1:
-            break
-
-    return int(numbers[0], base=2)
-
-
-def co2_scrubber(inputs):
-    numbers = inputs.copy()
-    for index in range(len(numbers[0])):
-        column = [x[index] for x in numbers]
-
-        bit_key = "1" if column.count("1") < column.count("0") else "0"
-
-        remove_list = [number for number in numbers if number[index] != bit_key]
-        for number in remove_list:
-            numbers.remove(number)
-        if len(numbers) == 1:
-            break
+    idx = 0
+    while len(numbers) > 1:
+        bit_key = get_rates(numbers)[rate_type][idx]
+        numbers = [number for number in numbers if number[idx] == bit_key]
+        idx += 1
 
     return int(numbers[0], base=2)
 
 
 def test_part_two():
-    oxygen_rating = oxygen_generation(test_data)
-    co2_rating = co2_scrubber(test_data)
+    oxygen_rating = gas_rates(test_data, "oxygen")
+    co2_rating = gas_rates(test_data, "co2")
     assert oxygen_rating, co2_rating == (23, 10)
     assert oxygen_rating * co2_rating == 230
 
 
 def part_two():
     inputs = load_input_file("input.txt")
-    oxygen_rating = oxygen_generation(inputs)
-    co2_rating = co2_scrubber(inputs)
+    oxygen_rating = gas_rates(inputs, "oxygen")
+    co2_rating = gas_rates(inputs, "co2")
     answer = oxygen_rating * co2_rating
-    print(f"\n# Answer: {answer}")
+    print(f"\n# Life support rating: {answer}")
 
 
 if __name__ == "__main__":
