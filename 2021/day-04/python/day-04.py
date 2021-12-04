@@ -47,49 +47,50 @@ test_data = process_input(test_string)
 
 
 def play_bingo(inputs):
-    draw_order, cards = inputs
-    card_size = len(cards[0])
+    draw_order, boards = inputs
+    board_size = len(boards[0])
     # marker_value = -1
 
-    winning_card = None
+    winning_board = None
 
     # set free space
-    free_space_coordinate = ceil(card_size / 2) - 1
-    for card in cards:
-        card[free_space_coordinate][free_space_coordinate] = -1
+    free_space_coordinate = ceil(board_size / 2) - 1
+    for board in boards:
+        board[free_space_coordinate][free_space_coordinate] = -1
 
     for draw_number in draw_order:
-        for card in cards:
-            for row in card:
+        for board in boards:
+            for row in board:
                 if draw_number in row:
                     row[row.index(draw_number)] = -1
 
-        for card in cards:
-            if card_size in [row.count(-1) for row in card]:
-                winning_card = card
-            elif card_size in [
-                [row[idx] for row in card].count(-1) for idx in range(card_size)
+        for board in boards:
+            if board_size in [row.count(-1) for row in board]:
+                winning_board = board
+            elif board_size in [
+                [row[idx] for row in board].count(-1) for idx in range(board_size)
             ]:
-                winning_card = card
-            elif [row[idx] for idx, row in enumerate(card)].count(-1) == card_size:
-                winning_card = card
+                winning_board = board
+            elif [row[idx] for idx, row in enumerate(board)].count(-1) == board_size:
+                winning_board = board
 
-            if winning_card is not None:
-                card_sum = sum(sum(x for x in row if x > 0) for row in winning_card)
-                return card_sum, draw_number
+            if winning_board is not None:
+                board_sum = sum(sum(x for x in row if x > 0) for row in winning_board)
+                print(winning_board)
+                return board_sum, draw_number
 
 
 def test_part_one():
-    card_sum, draw_number = play_bingo(test_data)
-    assert card_sum, draw_number == (188, 24)
-    assert card_sum * draw_number == 4512
+    board_sum, draw_number = play_bingo(test_data)
+    assert board_sum, draw_number == (188, 24)
+    assert board_sum * draw_number == 4512
 
 
 def part_one():
     inputs = load_input_file("input.txt")
-    card_sum, draw_number = play_bingo(inputs)
-    print(card_sum, draw_number)
-    answer = card_sum * draw_number
+    board_sum, draw_number = play_bingo(inputs)
+    print(board_sum, draw_number)
+    answer = board_sum * draw_number
     print(f"\n# Answer: {answer}")
 
 
