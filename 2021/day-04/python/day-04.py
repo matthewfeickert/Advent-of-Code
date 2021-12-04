@@ -1,6 +1,3 @@
-from math import ceil
-
-
 def process_input(input, card_size=5):
     data = input.splitlines()
     draw_order = list(map(int, data[0].split(",")))
@@ -53,10 +50,11 @@ def play_bingo(inputs):
 
     winning_board = None
 
-    # set free space
-    free_space_coordinate = ceil(board_size / 2) - 1
-    for board in boards:
-        board[free_space_coordinate][free_space_coordinate] = -1
+    # NO FREE SPACE
+    # # set free space
+    # free_space_coordinate = ceil(board_size / 2) - 1
+    # for board in boards:
+    #     board[free_space_coordinate][free_space_coordinate] = -1
 
     for draw_number in draw_order:
         for board in boards:
@@ -71,12 +69,12 @@ def play_bingo(inputs):
                 [row[idx] for row in board].count(-1) for idx in range(board_size)
             ]:
                 winning_board = board
-            elif [row[idx] for idx, row in enumerate(board)].count(-1) == board_size:
-                winning_board = board
+            # DIAGONALS DON'T COUNT
+            # elif [row[idx] for idx, row in enumerate(board)].count(-1) == board_size:
+            #     winning_board = board
 
             if winning_board is not None:
                 board_sum = sum(sum(x for x in row if x > 0) for row in winning_board)
-                print(winning_board)
                 return board_sum, draw_number
 
 
