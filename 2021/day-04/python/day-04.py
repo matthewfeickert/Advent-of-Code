@@ -87,23 +87,57 @@ def test_part_one():
 def part_one():
     inputs = load_input_file("input.txt")
     board_sum, draw_number = play_bingo(inputs)
-    print(board_sum, draw_number)
     answer = board_sum * draw_number
     print(f"\n# Answer: {answer}")
 
 
+def last_to_win(inputs):
+    draw_order, boards = inputs
+    board_size = len(boards[0])
+    # marker_value = -1
+
+    winning_board = None
+    winning_boards = []
+    winning_info = []
+
+    for draw_number in draw_order:
+        for board in boards:
+            for row in board:
+                if draw_number in row:
+                    row[row.index(draw_number)] = -1
+
+        for board in boards:
+            if board_size in [row.count(-1) for row in board]:
+                winning_board = board
+            elif board_size in [
+                [row[idx] for row in board].count(-1) for idx in range(board_size)
+            ]:
+                winning_board = board
+
+            if winning_board is not None and winning_board not in winning_boards:
+                winning_boards.append(winning_board)
+                board_sum = sum(sum(x for x in row if x > 0) for row in winning_board)
+                winning_info.append((board_sum, draw_number))
+                winning_board = None
+
+    return winning_info[-1]
+
+
 def test_part_two():
-    pass
+    board_sum, draw_number = last_to_win(test_data)
+    assert board_sum, draw_number == (148, 13)
+    assert board_sum * draw_number == 1924
 
 
 def part_two():
-    # inputs = load_input_file("input.txt")
-    # print(f"\n# Answer: {answer}")
-    pass
+    inputs = load_input_file("input.txt")
+    board_sum, draw_number = last_to_win(inputs)
+    answer = board_sum * draw_number
+    print(f"\n# Answer: {answer}")
 
 
 if __name__ == "__main__":
     test_part_one()
     part_one()
-    # test_part_two()
-    # part_two()
+    test_part_two()
+    part_two()
