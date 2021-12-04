@@ -73,11 +73,10 @@ def play_bingo(inputs):
                 winning_card = card
             elif [row[idx] for idx, row in enumerate(card)].count(-1) == card_size:
                 winning_card = card
-        if winning_card is not None:
-            break
 
-    card_sum = sum(sum(x for x in row if x > 0) for row in winning_card)
-    return card_sum, draw_number
+            if winning_card is not None:
+                card_sum = sum(sum(x for x in row if x > 0) for row in winning_card)
+                return card_sum, draw_number
 
 
 def test_part_one():
