@@ -23,17 +23,19 @@ test_string = """\
 test_data = process_input(test_string)
 
 
-def grid_print(grid, grid_size):
+def grid_str(grid):
+    grid_size = int(pow(len(grid.values()), 0.5))
     grid_text = ""
-    for y in range(grid_size):
+    for idx, y in enumerate(range(grid_size)):
         for x in range(grid_size):
             grid_value = grid[(x, y)]
             grid_text += str(grid_value) if grid_value > 0 else "."
-        grid_text += "\n"
-    print(grid_text)
+        if idx < grid_size - 1:
+            grid_text += "\n"
+    return grid_text
 
 
-def count_overlaps(inputs, critical_value=2):
+def compute_grid(inputs, allow_diagonals=False):
     grid_size = max(max(max(y) for y in x) for x in inputs) + 1
 
     grid = {}
@@ -43,44 +45,9 @@ def count_overlaps(inputs, critical_value=2):
 
     for coord in inputs:
         [x1, y1], [x2, y2] = coord
-        # horizontal lines only
-        if x1 != x2 and y1 != y2:
+
+        if x1 != x2 and y1 != y2 and not allow_diagonals:
             continue
-        if x1 == x2:
-            y_range = range(y1, y2 + 1) if y2 > y1 else range(y2, y1 + 1)
-            line_points = [(x1, y) for y in y_range]
-            for point in line_points:
-                grid[point] += 1
-        if y1 == y2:
-            x_range = range(x1, x2 + 1) if x2 > x1 else range(x2, x1 + 1)
-            line_points = [(x, y1) for x in x_range]
-            for point in line_points:
-                grid[point] += 1
-
-    return sum(x >= critical_value for x in grid.values())
-
-
-def test_part_one():
-    assert count_overlaps(test_data, critical_value=2) == 5
-
-
-def part_one():
-    inputs = load_input_file("input.txt")
-    answer = count_overlaps(inputs, critical_value=2)
-    print(f"\n# Answer: {answer}")
-
-
-def count_lines(inputs, critical_value=2):
-    grid_size = max(max(max(y) for y in x) for x in inputs) + 1
-
-    grid = {}
-    for y in range(grid_size):
-        for x in range(grid_size):
-            grid[(x, y)] = 0
-
-    for coord in inputs:
-        [x1, y1], [x2, y2] = coord
-
         if x1 == x2:
             y_range = range(y1, y2 + 1) if y2 > y1 else range(y2, y1 + 1)
             line_points = [(x1, y) for y in y_range]
@@ -101,16 +68,60 @@ def count_lines(inputs, critical_value=2):
         for point in line_points:
             grid[point] += 1
 
-    return sum(x >= critical_value for x in grid.values())
+    return grid
+
+
+def test_part_one():
+    grid = compute_grid(test_data, allow_diagonals=False)
+    assert (
+        grid_str(grid)
+        == """\
+.......1..
+..1....1..
+..1....1..
+.......1..
+.112111211
+..........
+..........
+..........
+..........
+222111....\
+"""
+    )
+    assert sum(x >= 2 for x in grid.values()) == 5
+
+
+def part_one():
+    inputs = load_input_file("input.txt")
+    grid = compute_grid(inputs, allow_diagonals=False)
+    answer = sum(x >= 2 for x in grid.values())
+    print(f"\n# Answer: {answer}")
 
 
 def test_part_two():
-    assert count_lines(test_data, critical_value=2) == 12
+    grid = compute_grid(test_data, allow_diagonals=True)
+    assert (
+        grid_str(grid)
+        == """\
+1.1....11.
+.111...2..
+..2.1.111.
+...1.2.2..
+.112313211
+...1.2....
+..1...1...
+.1.....1..
+1.......1.
+222111....\
+"""
+    )
+    assert sum(x >= 2 for x in grid.values()) == 12
 
 
 def part_two():
     inputs = load_input_file("input.txt")
-    answer = count_lines(inputs, critical_value=2)
+    grid = compute_grid(inputs, allow_diagonals=True)
+    answer = sum(x >= 2 for x in grid.values())
     print(f"\n# Answer: {answer}")
 
 
