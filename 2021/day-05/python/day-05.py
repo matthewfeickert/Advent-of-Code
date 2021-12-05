@@ -57,8 +57,6 @@ def count_overlaps(inputs, critical_value=2):
             for point in line_points:
                 grid[point] += 1
 
-    # grid_print(grid, grid_size)
-
     return sum(x >= critical_value for x in grid.values())
 
 
@@ -72,18 +70,52 @@ def part_one():
     print(f"\n# Answer: {answer}")
 
 
+def count_lines(inputs, critical_value=2):
+    grid_size = max(max(max(y) for y in x) for x in inputs) + 1
+
+    grid = {}
+    for y in range(grid_size):
+        for x in range(grid_size):
+            grid[(x, y)] = 0
+
+    for coord in inputs:
+        [x1, y1], [x2, y2] = coord
+
+        if x1 == x2:
+            y_range = range(y1, y2 + 1) if y2 > y1 else range(y2, y1 + 1)
+            line_points = [(x1, y) for y in y_range]
+        elif y1 == y2:
+            x_range = range(x1, x2 + 1) if x2 > x1 else range(x2, x1 + 1)
+            line_points = [(x, y1) for x in x_range]
+        else:
+            x_range = range(x1, x2 + 1) if x2 > x1 else reversed(range(x2, x1 + 1))
+            y_range = range(y1, y2 + 1) if y2 > y1 else reversed(range(y2, y1 + 1))
+            line_points = [
+                (x, y)
+                for x, y in zip(
+                    [x for x in x_range],
+                    [y for y in y_range],
+                )
+            ]
+
+        for point in line_points:
+            grid[point] += 1
+
+    return sum(x >= critical_value for x in grid.values())
+
+
 def test_part_two():
-    pass
+    assert count_lines(test_data, critical_value=2) == 12
 
 
 def part_two():
-    # inputs = load_input_file("input.txt")
-    # print(f"\n# Answer: {answer}")
-    pass
+    inputs = load_input_file("input.txt")
+    answer = count_lines(inputs, critical_value=2)
+    print(f"\n# Answer: {answer}")
 
 
 if __name__ == "__main__":
     test_part_one()
     part_one()
-    # test_part_two()
-    # part_two()
+    test_part_two()
+    part_two()
