@@ -1,3 +1,6 @@
+# Solution to note: https://www.reddit.com/r/adventofcode/comments/r8i1lq/2021_day_4_solutions/hn8b2u1/
+
+
 def process_input(input, card_size=5):
     data = input.splitlines()
     draw_order = list(map(int, data[0].split(",")))
