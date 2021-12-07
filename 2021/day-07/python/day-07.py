@@ -37,18 +37,24 @@ def part_one():
     print(f"\n# Answer: {answer}")
 
 
+def burn_fuel(inputs, position):
+    return sum(sum(list(range(1, abs(x - position) + 1))) for x in inputs)
+
+
 def test_part_two():
-    pass
+    assert burn_fuel(test_data, position=2) == 206
+    assert burn_fuel(test_data, position=5) == 168
 
 
 def part_two():
-    # inputs = load_input_file("input.txt")
-    # print(f"\n# Answer: {answer}")
-    pass
+    inputs = load_input_file("input.txt")
+    fuel_cost = [burn_fuel(inputs, position) for position in range(max(inputs))]
+    answer = min(fuel_cost)
+    print(f"\n# Answer: {answer}")
 
 
 if __name__ == "__main__":
     test_part_one()
     part_one()
-    # test_part_two()
-    # part_two()
+    test_part_two()
+    part_two()
