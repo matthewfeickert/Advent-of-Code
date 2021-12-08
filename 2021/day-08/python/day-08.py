@@ -26,11 +26,11 @@ test_data = process_input(test_string)
 def count_unique(inputs):
     info_map = {n: 0 for n in range(10)}
 
+    unique_numbers = {1: 2, 4: 4, 7: 3, 8: 7}
+
     for signals, outputs in inputs:
         signal_length = list(map(len, signals))
         output_length = list(map(len, outputs))
-
-        unique_numbers = {1: 2, 4: 4, 7: 3, 8: 7}
 
         for key, value in unique_numbers.items():
             if value in signal_length and value in output_length:
@@ -49,8 +49,43 @@ def part_one():
     print(f"\n# Answer: {answer}")
 
 
+def solve(inputs):
+    digit_map = {n: None for n in range(10)}
+    digit_components = {0: 6, 1: 2, 2: 5, 3: 5, 4: 4, 5: 5, 6: 6, 7: 3, 8: 7, 9: 6}
+    unique_digits = {1: 2, 4: 4, 7: 3, 8: 7}
+
+    for signals, outputs in inputs:
+        signal_length = list(map(len, signals))
+        output_length = list(map(len, outputs))
+
+        # First get the mappings of the unique numbers
+        for key, value in unique_digits.items():
+            if value in signal_length and value in output_length:
+                digit_map[key] = signals[signal_length.index(value)]
+
+            if not [x for x in (digit_map[key] for key in unique_digits) if x is None]:
+                break
+
+        # Numbers that contain 1: 3, 4, 7, 8, 9
+        # Numbers that contain 4: 8, 9
+        # Numbers that contain 7: 0, 3, 8, 9
+        # Numbers that contain 8: None
+
+    # Next work on the numbers that contain 6 digits: 0, 6, 9
+    for signals, outputs in inputs:
+        signal_length = list(map(len, signals))
+        output_length = list(map(len, outputs))
+
+        if 6 in signal_length:
+            six_candidates = [x for x in signals if len(x) == 6]
+            components = set("".join(six_candidates))
+            breakpoint()
+
+        # Next work on the numbers that contain 5 digits: 2, 3, 5
+
+
 def test_part_two():
-    pass
+    assert solve(test_data) == 61229
 
 
 def part_two():
@@ -62,5 +97,5 @@ def part_two():
 if __name__ == "__main__":
     test_part_one()
     part_one()
-    # test_part_two()
+    test_part_two()
     # part_two()
