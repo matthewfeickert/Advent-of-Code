@@ -7,6 +7,7 @@ def load_input_file(path):
         return process_input(input_file.read())
 
 
+# unique signal patterns | four digit output value
 test_string = """\
 be cfbegad cbdgef fgaecd cgeb fdcge agebfd fecdb fabcd edb | fdgacbe cefdb cefbgd gcbe
 edbfga begcd cbg gc gcadebf fbgde acbgfd abcde gfcbed gfec | fcgedb cgb dgebacf gc
@@ -23,7 +24,19 @@ test_data = process_input(test_string)
 
 
 def count_unique(inputs):
-    return 1
+    info_map = {n: 0 for n in range(10)}
+
+    for signals, outputs in inputs:
+        signal_length = list(map(len, signals))
+        output_length = list(map(len, outputs))
+
+        unique_numbers = {1: 2, 4: 4, 7: 3, 8: 7}
+
+        for key, value in unique_numbers.items():
+            if value in signal_length and value in output_length:
+                info_map[key] += output_length.count(value)
+
+    return sum(info_map.values())
 
 
 def test_part_one():
@@ -31,9 +44,9 @@ def test_part_one():
 
 
 def part_one():
-    # inputs = load_input_file("input.txt")
-    # print(f"\n# Answer: {answer}")
-    pass
+    inputs = load_input_file("input.txt")
+    answer = count_unique(inputs)
+    print(f"\n# Answer: {answer}")
 
 
 def test_part_two():
@@ -48,6 +61,6 @@ def part_two():
 
 if __name__ == "__main__":
     test_part_one()
-    # part_one()
+    part_one()
     # test_part_two()
     # part_two()
