@@ -37,17 +37,24 @@ def part_one():
 
 
 def test_part_two():
-    assert count_increases(test_data, width=3) == 5
+    inputs = load_input_file("test-input-01.txt")
+    sum_list = filter_to_list(inputs)
+    sum_list = list(map(sum, sum_list))
+    sorted_list = sorted(sum_list, reverse=True)
+    assert sum(sorted_list[:3]) == 45000
 
 
 def part_two():
     inputs = load_input_file("input.txt")
-    # answer = count_increases(inputs, width=3)
-    # print(f"\n# Sums larger than the previous sum: {answer}")
+    sum_list = filter_to_list(inputs)
+    sum_list = list(map(sum, sum_list))
+    sorted_list = sorted(sum_list, reverse=True)
+    answer = sum(sorted_list[:3])
+    print(f"\n# top three Elves carrying the most Calories sum: {answer}")
 
 
 if __name__ == "__main__":
     test_part_one()
     part_one()
-    # test_part_two()
-    # part_two()
+    test_part_two()
+    part_two()
