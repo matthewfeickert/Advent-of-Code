@@ -30,6 +30,33 @@ def play_game(inputs):
         return 0 + shape_score if your_move == "Y" else 6 + shape_score
 
 
+def play_game_second_round(inputs):
+    # Rock: A, 1 point
+    # Paper: B, 2 points
+    # Scissors: C, 3 points
+
+    # Lose: X, 0 points
+    # Draw: Y, 3 points
+    # Win: Z, 6 points
+
+    opponent_move, goal = inputs
+
+    lose_dict = {"A": "C", "B": "A", "C": "B"}
+    # draw_dict = {"A": "A", "B": "B", "C": "C"}
+    win_dict = {"A": "B", "B": "C", "C": "A"}
+
+    if goal == "X":
+        your_move = lose_dict[opponent_move]
+    if goal == "Y":
+        your_move = opponent_move
+    if goal == "Z":
+        your_move = win_dict[opponent_move]
+
+    conversion_dict = {"A": "X", "B": "Y", "C": "Z"}
+
+    return play_game([opponent_move, conversion_dict[your_move]])
+
+
 def test_part_one():
     inputs = load_input_file("test_input.txt")
     scores = [play_game(x) for x in inputs]
@@ -46,14 +73,20 @@ def part_one():
 
 def test_part_two():
     inputs = load_input_file("test_input.txt")
+    scores = [play_game_second_round(x) for x in inputs]
+    assert scores == [4, 1, 7]
+    assert sum(scores) == 12
 
 
 def part_two():
     inputs = load_input_file("input.txt")
+    scores = [play_game_second_round(x) for x in inputs]
+    answer = sum(scores)
+    print(f"\n# Total score given strategy guide: {answer}")
 
 
 if __name__ == "__main__":
     test_part_one()
     part_one()
-    # test_part_two()
-    # part_two()
+    test_part_two()
+    part_two()
