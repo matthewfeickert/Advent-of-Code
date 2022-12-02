@@ -41,15 +41,14 @@ def play_game_second_round(inputs):
 
     opponent_move, goal = inputs
 
-    lose_dict = {"A": "C", "B": "A", "C": "B"}
-    # draw_dict = {"A": "A", "B": "B", "C": "C"}
-    win_dict = {"A": "B", "B": "C", "C": "A"}
-
     if goal == "X":
+        lose_dict = {"A": "C", "B": "A", "C": "B"}
         your_move = lose_dict[opponent_move]
-    if goal == "Y":
+    elif goal == "Y":
         your_move = opponent_move
     if goal == "Z":
+        win_dict = {"A": "B", "B": "C", "C": "A"}
+
         your_move = win_dict[opponent_move]
 
     conversion_dict = {"A": "X", "B": "Y", "C": "Z"}
