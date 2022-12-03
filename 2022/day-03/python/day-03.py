@@ -6,10 +6,22 @@ def load_input_file(path):
         return [line.strip() for line in input_file]
 
 
+def get_common_element(word_0, word_1):
+    return "".join(set(word_0).intersection(word_1))
+
+
 def get_priority(inputs):
     half_length = len(inputs) // 2
     left, right = inputs[:half_length], inputs[half_length:]
-    common_element = "".join(set(left).intersection(right))
+    common_element = get_common_element(left, right)
+
+    offset = 0 if common_element.islower() else 26
+    return ord(common_element.lower()) - 96 + offset
+
+
+def compare_three(inputs):
+    word_0, word_1, word_2 = inputs
+    common_element = get_common_element(get_common_element(word_0, word_1), word_2)
 
     offset = 0 if common_element.islower() else 26
     return ord(common_element.lower()) - 96 + offset
@@ -31,20 +43,24 @@ def part_one():
 
 def test_part_two():
     inputs = load_input_file("test_input.txt")
-    scores = [play_game_second_round(x) for x in inputs]
-    assert scores == [4, 1, 7]
-    assert sum(scores) == 12
+    step = 3
+    strides = [inputs[x : x + step] for x in range(0, len(inputs), step)]
+    priorities = [compare_three(x) for x in strides]
+    assert priorities == [18, 52]
+    assert sum(priorities) == 70
 
 
 def part_two():
     inputs = load_input_file("input.txt")
-    scores = [play_game_second_round(x) for x in inputs]
-    answer = sum(scores)
-    print(f"\n# Total score given strategy guide: {answer}")
+    step = 3
+    strides = [inputs[x : x + step] for x in range(0, len(inputs), step)]
+    priorities = [compare_three(x) for x in strides]
+    answer = sum(priorities)
+    print(f"\n# Sum of the priorities of the common items: {answer}")
 
 
 if __name__ == "__main__":
     test_part_one()
     part_one()
-    # test_part_two()
-    # part_two()
+    test_part_two()
+    part_two()
