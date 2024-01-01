@@ -4,7 +4,7 @@ import csv
 
 
 def load_input_file(path):
-    return [int(x[0]) for x in csv.reader(open(path, "r"), delimiter="\t")]
+    return [int(x[0]) for x in csv.reader(open(path), delimiter="\t")]
 
 
 def fuel_for_module(mass):
