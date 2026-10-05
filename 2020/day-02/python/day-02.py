@@ -15,7 +15,7 @@ def parse_data(data):
         rule, token = line.split(":")
         key = rule[-1]
         _range = rule[:-1].strip().split("-")
-        _min, _max = [int(item) for item in _range]
+        _min, _max = (int(item) for item in _range)
         token = token.strip()
         parsed_data.append({"key": key, "min": _min, "max": _max, "token": token})
     return parsed_data

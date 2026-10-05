@@ -5,7 +5,7 @@ import itertools
 
 def load_input_file(path):
     # Load a single line csv file
-    return [list(map(int, rec)) for rec in csv.reader(open(path, "r"), delimiter=",")][
+    return [list(map(int, rec)) for rec in csv.reader(open(path), delimiter=",")][
         0
     ]
 
